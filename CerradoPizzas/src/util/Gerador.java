@@ -3,6 +3,7 @@
 package util;
 
 import java.util.Random;
+import model.Pedido;
 
 public class Gerador {
         
@@ -32,13 +33,17 @@ public class Gerador {
         
         };
     
-        public static String novaPizza(){
+        public static String newPizza(){
             int pos = random.nextInt(pizzas.length);
             
             return pizzas[pos];
         }
-        public static String novoNome(){
+        public static String newNome(){
             int pos = random.nextInt(nomes.length);
             return nomes[pos];
+        }
+        
+        public static String novoPedidoJSON(){
+            return new Pedido(newNome(),newPizza()).toJSON();
         }
 }
