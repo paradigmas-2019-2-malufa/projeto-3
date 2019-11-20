@@ -12,20 +12,20 @@ public class Pedido {
         this.pizza = pizza;
     }
 
-    private String getNomeJson() {
+    private String getNomeJSON() {
         return "\"nome\": \"" + nome + "\"";
     }
 
-    private String getPizzaJson() {
+    private String getPizzaJSON() {
         return "\"pizza\": \"" + pizza + "\"";
     }
 
-    public String toJson() {
+    public String toJSON() {
         StringJoiner sj = new StringJoiner(",","{","}");
         sj.setEmptyValue("{}");
         
-        sj.add(getNomeJson());
-        sj.add(getPizzaJson());
+        sj.add(getNomeJSON());
+        sj.add(getPizzaJSON());
         
         
         String json = sj.toString();
