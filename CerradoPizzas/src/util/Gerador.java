@@ -29,8 +29,11 @@ public class Gerador {
             "Vegetariana",
             "Americana",
             "Rapadura",
-            "Beijinho"
-        
+            "Beijinho",
+            "Romeu e Julieta",
+            "Marguerita",
+            "Muçarela",
+            "Brigadeiro"            
         };
     
         public static String newPizza(){
