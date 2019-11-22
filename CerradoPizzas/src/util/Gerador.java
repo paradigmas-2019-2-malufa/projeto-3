@@ -46,7 +46,13 @@ public class Gerador {
             return nomes[pos];
         }
         
-        public static String novoPedidoJSON(){
-            return new Pedido(newNome(),newPizza()).toJSON();
+        public static int newMesa() {
+        	return random.nextInt(10)+1;
+		}
+        
+        public static String novoPedidoJSON() throws InterruptedException{
+            Thread.sleep(1000);
+        	return new Pedido(newNome(),newPizza(),newMesa()).toJSON();
+            
         }
 }

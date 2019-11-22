@@ -6,10 +6,12 @@ public class Pedido {
 
     private String nome;
     private String pizza;
+    private int mesa;
 
-    public Pedido(String nome, String pizza) {
+    public Pedido(String nome, String pizza, int mesa) {
         this.nome = nome;
         this.pizza = pizza;
+        this.mesa = mesa;
     }
 
     private String getNomeJSON() {
@@ -19,6 +21,10 @@ public class Pedido {
     private String getPizzaJSON() {
         return "\"pizza\": \"" + pizza + "\"";
     }
+    
+    private String getMesaJSON() {
+    	return "\"mesa\": \"" + mesa + "\"";
+    }
 
     public String toJSON() {
         StringJoiner sj = new StringJoiner(",","{","}");
@@ -26,6 +32,7 @@ public class Pedido {
         
         sj.add(getNomeJSON());
         sj.add(getPizzaJSON());
+        sj.add(getMesaJSON());
         
         
         String json = sj.toString();
