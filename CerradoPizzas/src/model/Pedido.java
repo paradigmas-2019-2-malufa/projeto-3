@@ -1,6 +1,8 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.StringJoiner;
+import util.Gerador;
 
 public class Pedido {
 
@@ -39,4 +41,14 @@ public class Pedido {
         
         return json;
     }
+    
+    public static  ArrayList<Pedido> geraPedidos(int quantidade){
+           ArrayList<Pedido> pedidos = new ArrayList<>();
+           for(int i = 0 ; i< quantidade; i++){
+               pedidos.add( new Pedido(Gerador.newNome(),Gerador.newPizza(),Gerador.newMesa()));
+             
+           }
+           return pedidos;
+    }
+    
 }
