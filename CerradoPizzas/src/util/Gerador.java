@@ -2,13 +2,14 @@
 
 package util;
 
+import java.util.Hashtable;
 import java.util.Random;
 import model.Pedido;
 
 public class Gerador {
         
         private static Random random = new Random();
-
+        private static final int PRECOBASE = 15;
         private static String[] nomes = {
             "Lucas","Marcelo","Matheus","Fabiana","Milene","Romeu","Gabriela",
             "Micaella","João","Keanu Reeves"
@@ -33,7 +34,17 @@ public class Gerador {
             "Romeu e Julieta",
             "Marguerita",
             "Muçarela",
-            "Brigadeiro"            
+            "Brigadeiro",
+            "Tradicional",
+            "Escarola",
+            "Mexicana",
+            "Carioca",
+            "Lombo com catupiry",
+            "Vegetariana",
+            "Parmegiana",
+            "Do sogro",
+            "Do chefe",
+            "Quatro queijos estravaganza"
         };
     
         public static String newPizza(){
@@ -54,5 +65,12 @@ public class Gerador {
             Thread.sleep(1000);
         	return new Pedido(newNome(),newPizza(),newMesa()).toJSON();
             
+        }
+        public static Hashtable<String,Integer> newCatalogo(){
+            Hashtable<String,Integer>  menu = new Hashtable<>();
+            
+            for(String s :pizzas)
+                menu.put(s,PRECOBASE + random.nextInt(15));            
+            return menu;            
         }
 }
