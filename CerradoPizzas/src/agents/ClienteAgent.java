@@ -13,9 +13,9 @@ public class ClienteAgent extends Agent {
 
 	private static final long serialVersionUID = 1L;
 	// The title of the book to buy
-	private String targetBookTitle;
+	private String pizzaName;
 	// The list of known seller agents
-	private AID[] sellerAgents;
+	private AID[] pizzariaAgents;
 
 	// Put agent initializations here
 	protected void setup() {
@@ -25,8 +25,8 @@ public class ClienteAgent extends Agent {
 		// Get the title of the book to buy as a start-up argument
 		Object[] args = getArguments();
 		if (args != null && args.length > 0) {
-			targetBookTitle = (String) args[0];
-			System.out.println("A pizza pedida eh "+targetBookTitle);
+			pizzaName = (String) args[0];
+			System.out.println("A pizza pedida eh "+pizzaName);
 
 			// Add a TickerBehaviour that schedules a request to seller agents every 10 seconds
 			addBehaviour(new TickerBehaviour(this, 10000) {
@@ -34,7 +34,7 @@ public class ClienteAgent extends Agent {
 				private static final long serialVersionUID = 1L;
 
 				protected void onTick() {
-					System.out.println("Tentando pedir a pizza "+targetBookTitle);
+					System.out.println("Tentando pedir a pizza "+pizzaName);
 					// Update the list of seller agents
 					DFAgentDescription template = new DFAgentDescription();
 					ServiceDescription sd = new ServiceDescription();
@@ -43,10 +43,10 @@ public class ClienteAgent extends Agent {
 					try {
 						DFAgentDescription[] result = DFService.search(myAgent, template); 
 						System.out.println("Pizzas disponiveis no menu:");
-						sellerAgents = new AID[result.length];
+						pizzariaAgents = new AID[result.length];
 						for (int i = 0; i < result.length; ++i) {
-							sellerAgents[i] = result[i].getName();
-							System.out.println(sellerAgents[i].getName());
+							pizzariaAgents[i] = result[i].getName();
+							System.out.println(pizzariaAgents[i].getName());
 						}
 					}
 					catch (FIPAException fe) {
@@ -74,8 +74,8 @@ public class ClienteAgent extends Agent {
 	private class RequestPerformer extends Behaviour {
 
 		private static final long serialVersionUID = 1L;
-		private AID bestSeller; // The agent who provides the best offer 
-		private int bestPrice;  // The best offered price
+		private AID melhorPizzaria; // The agent who provides the best offer 
+		private int pizzaMaisVendida;  // The best offered price
 		private int repliesCnt = 0; // The counter of replies from seller agents
 		private MessageTemplate mt; // The template to receive replies
 		private int step = 0;
@@ -85,10 +85,10 @@ public class ClienteAgent extends Agent {
 			case 0:
 				// Send the cfp to all sellers
 				ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
-				for (int i = 0; i < sellerAgents.length; ++i) {
-					cfp.addReceiver(sellerAgents[i]);
+				for (int i = 0; i < pizzariaAgents.length; ++i) {
+					cfp.addReceiver(pizzariaAgents[i]);
 				} 
-				cfp.setContent(targetBookTitle);
+				cfp.setContent(pizzaName);
 				cfp.setConversationId("pedido-pizza");
 				cfp.setReplyWith("cfp"+System.currentTimeMillis()); // Unique value
 				myAgent.send(cfp);
@@ -105,14 +105,14 @@ public class ClienteAgent extends Agent {
 					if (reply.getPerformative() == ACLMessage.PROPOSE) {
 						// This is an offer 
 						int price = Integer.parseInt(reply.getContent());
-						if (bestSeller == null || price < bestPrice) {
+						if (melhorPizzaria == null || price < pizzaMaisVendida) {
 							// This is the best offer at present
-							bestPrice = price;
-							bestSeller = reply.getSender();
+							pizzaMaisVendida = price;
+							melhorPizzaria = reply.getSender();
 						}
 					}
 					repliesCnt++;
-					if (repliesCnt >= sellerAgents.length) {
+					if (repliesCnt >= pizzariaAgents.length) {
 						// We received all replies
 						step = 2; 
 					}
@@ -124,8 +124,8 @@ public class ClienteAgent extends Agent {
 			case 2:
 				// Send the purchase order to the seller that provided the best offer
 				ACLMessage order = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
-				order.addReceiver(bestSeller);
-				order.setContent(targetBookTitle);
+				order.addReceiver(melhorPizzaria);
+				order.setContent(pizzaName);
 				order.setConversationId("pedido-pizza");
 				order.setReplyWith("order"+System.currentTimeMillis());
 				myAgent.send(order);
@@ -141,8 +141,8 @@ public class ClienteAgent extends Agent {
 					// Purchase order reply received
 					if (reply.getPerformative() == ACLMessage.INFORM) {
 						// Purchase successful. We can terminate
-						System.out.println(targetBookTitle+" successfully purchased from agent "+reply.getSender().getName());
-						System.out.println("Preço = "+bestPrice);
+						System.out.println(pizzaName+" successfully purchased from agent "+reply.getSender().getName());
+						System.out.println("Preço = "+pizzaMaisVendida);
 						myAgent.doDelete();
 					}
 					else {
@@ -160,11 +160,11 @@ public class ClienteAgent extends Agent {
 
 		public boolean done() {
 			
-			if (step == 2 && bestSeller == null) {
-				System.out.println("Attempt failed: "+targetBookTitle+" not available for sale");
+			if (step == 2 && melhorPizzaria == null) {
+				System.out.println("Attempt failed: "+pizzaName+" not available for sale");
 			}
 			
-			boolean bookIsNotAvailable = (step == 2 && bestSeller == null);
+			boolean bookIsNotAvailable = (step == 2 && melhorPizzaria == null);
 			boolean negotiationIsConcluded = (step == 4);
 			
 			boolean isDone = false;

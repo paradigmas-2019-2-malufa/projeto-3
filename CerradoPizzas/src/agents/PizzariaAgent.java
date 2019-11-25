@@ -70,10 +70,10 @@ public class PizzariaAgent extends Agent {
 			ACLMessage msg = myAgent.receive(mt);
 			if (msg != null) {
 				// CFP Message received. Process it
-				String title = msg.getContent();
+				String pizzaName = msg.getContent();
 				ACLMessage reply = msg.createReply();
 
-				Integer price = (Integer) menu.get(title);
+				Integer price = (Integer) menu.get(pizzaName);
 				if (price != null) {
 					// The requested book is available for sale. Reply with the price
 					reply.setPerformative(ACLMessage.PROPOSE);
@@ -110,13 +110,13 @@ public class PizzariaAgent extends Agent {
 			ACLMessage msg = myAgent.receive(mt);
 			if (msg != null) {
 				// ACCEPT_PROPOSAL Message received. Process it
-				String title = msg.getContent();
+				String pizzaName = msg.getContent();
 				ACLMessage reply = msg.createReply();
 
-				Integer price = (Integer) menu.remove(title);
+				Integer price = (Integer) menu.remove(pizzaName);
 				if (price != null) {
 					reply.setPerformative(ACLMessage.INFORM);
-					System.out.println(title+" sold to agent "+msg.getSender().getName());
+					System.out.println(pizzaName+" sold to agent "+msg.getSender().getName());
 				}
 				else {
 					// The requested book has been sold to another buyer in the meanwhile .
@@ -136,14 +136,14 @@ public class PizzariaAgent extends Agent {
 	/**
     This is invoked by the GUI when the user adds a new book for sale
 	 */
-	public void updateCatalogue(final String title, final int price) {
+	public void updateCatalogue(final String pizzaName, final int price) {
 		addBehaviour(new OneShotBehaviour() {
 
 			private static final long serialVersionUID = 1L;
 
 			public void action() {
-				menu.put(title, new Integer(price));
-				System.out.println(title+" inserido no menu. Preço = "+price);
+				menu.put(pizzaName, new Integer(price));
+				System.out.println(pizzaName+" inserido no menu. Preço = "+price);
 			}
 		} );
 	}
