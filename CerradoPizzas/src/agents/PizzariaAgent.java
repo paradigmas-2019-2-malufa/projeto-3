@@ -17,7 +17,7 @@ public class PizzariaAgent extends Agent {
 	// The catalogue of books for sale (maps the title of a book to its price)
 	private Hashtable<String,Integer> catalogue;
 	// The GUI by means of which the user can add books in the catalogue
-	private BookSellerGui myGui;
+	//private BookSellerGui myGui;
 
 	// Put agent initializations here
 	protected void setup() {
@@ -25,8 +25,8 @@ public class PizzariaAgent extends Agent {
 		catalogue = new Hashtable<String,Integer>();
 
 		// Create and show the GUI 
-		myGui = new BookSellerGui(this);
-		myGui.showGui();
+		//myGui = new BookSellerGui(this);
+		//myGui.showGui();
 
 		// Register the book-selling service in the yellow pages
 		DFAgentDeion dfd = new DFAgentDeion();
@@ -159,12 +159,8 @@ public class PizzariaAgent extends Agent {
 				fe.printStackTrace();
 			}
 			// Close the GUI
-			myGui.dispose();
+			//myGui.dispose();
 			// Printout a dismissal message
 			System.out.println("Seller-agent "+getAID().getName()+" terminating.");
 		}
-}
-
-
-
 }
