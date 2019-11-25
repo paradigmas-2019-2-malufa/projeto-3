@@ -8,11 +8,11 @@ import model.Pedido;
 
 public class Gerador {
         
-        private static Random random = new Random();
+        public static Random random = new Random();
         private static final int PRECOBASE = 15;
         private static String[] nomes = {
             "Lucas","Marcelo","Matheus","Fabiana","Milene","Romeu","Gabriela",
-            "Micaella","João","Keanu Reeves"
+            "Micaella","João","Keanu Reeves","Ester","Eduarda","Péricles"
         };
     
         private static String [] pizzas = {

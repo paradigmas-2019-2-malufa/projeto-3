@@ -16,6 +16,18 @@ public class Pedido {
         this.mesa = mesa;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public String getPizza() {
+        return pizza;
+    }
+
+    public int getMesa() {
+        return mesa;
+    }
+
     private String getNomeJSON() {
         return "\"nome\": \"" + nome + "\"";
     }
