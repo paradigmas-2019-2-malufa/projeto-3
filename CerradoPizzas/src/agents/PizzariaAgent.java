@@ -32,8 +32,8 @@ public class PizzariaAgent extends Agent {
 		DFAgentDeion dfd = new DFAgentDeion();
 		dfd.setName(getAID());
 		ServiceDeion sd = new ServiceDeion();
-		sd.setType("book-selling");
-		sd.setName("JADE-book-trading");
+		sd.setType("pizza-selling");
+		sd.setName("JADE-pizza-trading");
 		dfd.addServices(sd);	
 		try {
 			DFService.register(this, dfd);
@@ -82,7 +82,7 @@ public class PizzariaAgent extends Agent {
 				else {
 					// The requested book is NOT available for sale.
 					reply.setPerformative(ACLMessage.REFUSE);
-					reply.setContent("not-available");
+					reply.setContent("Não esta disponivel!");
 				}
 				myAgent.send(reply);
 			}
@@ -121,7 +121,7 @@ public class PizzariaAgent extends Agent {
 				else {
 					// The requested book has been sold to another buyer in the meanwhile .
 					reply.setPerformative(ACLMessage.FAILURE);
-					reply.setContent("not-available");
+					reply.setContent("Não esta disponivel!");
 				}
 				myAgent.send(reply);
 			}
@@ -143,7 +143,7 @@ public class PizzariaAgent extends Agent {
 
 			public void action() {
 				catalogue.put(title, new Integer(price));
-				System.out.println(title+" inserted into catalogue. Price = "+price);
+				System.out.println(title+" inserido no menu. Preço = "+price);
 			}
 		} );
 	}
@@ -161,6 +161,7 @@ public class PizzariaAgent extends Agent {
 			// Close the GUI
 			//myGui.dispose();
 			// Printout a dismissal message
-			System.out.println("Seller-agent "+getAID().getName()+" terminating.");
+			System.out.println("Pizzaria "+getAID().getName()+" fechada!");
 		}
 }
+
