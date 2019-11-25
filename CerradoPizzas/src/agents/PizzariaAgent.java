@@ -8,27 +8,21 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import java.util.*;
+import util.Gerador;
 
 public class PizzariaAgent extends Agent {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	// The catalogue of books for sale (maps the title of a book to its price)
 	private Hashtable<String,Integer> menu;
-	// The GUI by means of which the user can add books in the catalogue
-	//private BookSellerGui myGui;
-
-	// Put agent initializations here
-	protected void setup() {
+	
+        protected void setup() {
 		// Create the catalogue
-		menu = new Hashtable<String,Integer>();
-
-		// Create and show the GUI 
-		//myGui = new BookSellerGui(this);
-		//myGui.showGui();
-
-		// Register the book-selling service in the yellow pages
+		menu = Gerador.newCatalogo();
+                System.out.println("Menu da "+ this.getName());
+                System.out.println(menu.toString());
+		
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
 		ServiceDescription sd = new ServiceDescription();
@@ -42,25 +36,14 @@ public class PizzariaAgent extends Agent {
 			fe.printStackTrace();
 		}
 
-		// Add the behaviour serving queries from buyer agents
 		// Servidor de Requisi��es de Ofertas
 		addBehaviour(new OfferRequestsServer());
 
-		// Add the behaviour serving purchase orders from buyer agents
 		// Servidor de Pedidos de Compras
 		addBehaviour(new PurchaseOrdersServer());
 	}
 
-	/**
-	   Inner class OfferRequestsServer.
-	   This is the behaviour used by Book-seller agents to serve incoming requests 
-	   for offer from buyer agents.
-	   If the requested book is in the local catalogue the seller agent replies 
-	   with a PROPOSE message specifying the price. Otherwise a REFUSE message is
-	   sent back.
-	 */
-	// Servidor de Requisi��es de Ofertas
-	//FIPA PROTOCOLS: http://www.fipa.org/specs/fipa00030/
+	
 	private class OfferRequestsServer extends CyclicBehaviour {
 
 		private static final long serialVersionUID = 1L;
@@ -90,16 +73,8 @@ public class PizzariaAgent extends Agent {
 				block();
 			}
 		}
-	}  // End of inner class OfferRequestsServer
+	} 
 
-	/**
-	   Inner class PurchaseOrdersServer.
-	   This is the behaviour used by Book-seller agents to serve incoming 
-	   offer acceptances (i.e. purchase orders) from buyer agents.
-	   The seller agent removes the purchased book from its catalogue 
-	   and replies with an INFORM message to notify the buyer that the
-	   purchase has been sucesfully completed.
-	 */
 	// Servidor de Pedidos de Compras
 	private class PurchaseOrdersServer extends CyclicBehaviour {
 
@@ -109,7 +84,6 @@ public class PizzariaAgent extends Agent {
 			MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL);
 			ACLMessage msg = myAgent.receive(mt);
 			if (msg != null) {
-				// ACCEPT_PROPOSAL Message received. Process it
 				String pizzaName = msg.getContent();
 				ACLMessage reply = msg.createReply();
 
@@ -119,7 +93,6 @@ public class PizzariaAgent extends Agent {
 					System.out.println(pizzaName+" sold to agent "+msg.getSender().getName());
 				}
 				else {
-					// The requested book has been sold to another buyer in the meanwhile .
 					reply.setPerformative(ACLMessage.FAILURE);
 					reply.setContent("Não esta disponivel!");
 				}
@@ -129,13 +102,8 @@ public class PizzariaAgent extends Agent {
 				block();
 			}
 		}
-	}  // End of inner class OfferRequestsServer
-	
-	
-	
-	/**
-    This is invoked by the GUI when the user adds a new book for sale
-	 */
+	} 
+        
 	public void updateCatalogue(final String pizzaName, final int price) {
 		addBehaviour(new OneShotBehaviour() {
 
@@ -149,18 +117,13 @@ public class PizzariaAgent extends Agent {
 	}
 	
 	
-	// Put agent clean-up operations here
 		protected void takeDown() {
-			// Deregister from the yellow pages
 			try {
 				DFService.deregister(this);
 			}
 			catch (FIPAException fe) {
 				fe.printStackTrace();
 			}
-			// Close the GUI
-			//myGui.dispose();
-			// Printout a dismissal message
 			System.out.println("Pizzaria "+getAID().getName()+" fechada!");
 		}
 }
