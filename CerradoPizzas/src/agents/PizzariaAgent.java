@@ -38,7 +38,7 @@ public class PizzariaAgent extends Agent {
 		try {
 			DFService.register(this, dfd);
 		}
-		catch (FIPAException fe) {
+		catch (Exception fe) {
 			fe.printStackTrace();
 		}
 
