@@ -9,6 +9,10 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
+import java.util.ArrayList;
+import model.Pedido;
+import util.Gerador;
+
 public class ClienteAgent extends Agent {
 
 	private static final long serialVersionUID = 1L;
@@ -16,20 +20,23 @@ public class ClienteAgent extends Agent {
 	private String pizzaName;
 	// The list of known seller agents
 	private AID[] pizzariaAgents;
-
+        private ArrayList<Pedido> pedidos = null;
 	// Put agent initializations here
 	protected void setup() {
 		// Printout a welcome message
 		System.out.println("Olá! Cliente "+getAID().getName()+" está pronto para fazer um pedido!");
 
 		// Get the title of the book to buy as a start-up argument
-		Object[] args = getArguments();
-		if (args != null && args.length > 0) {
-			pizzaName = (String) args[0];
+//		Object[] args = getArguments();
+                pedidos = Pedido.geraPedidos(10);
+                int size = pedidos.size();
+                for(int i=0 ;i < size  ; i++)
+		if (pedidos != null && pedidos.size()> 0) {
+			pizzaName = (String) pedidos.get(0).getPizza() ;
 			System.out.println("A pizza pedida eh "+pizzaName);
 
 			// Add a TickerBehaviour that schedules a request to seller agents every 10 seconds
-			addBehaviour(new TickerBehaviour(this, 10000) {
+			addBehaviour(new TickerBehaviour(this, Gerador.random.nextInt(1500)+1000) {
 
 				private static final long serialVersionUID = 1L;
 
@@ -74,8 +81,8 @@ public class ClienteAgent extends Agent {
 	private class RequestPerformer extends Behaviour {
 
 		private static final long serialVersionUID = 1L;
-		private AID melhorPizzaria; // The agent who provides the best offer 
-		private int pizzaMaisVendida;  // The best offered price
+		private AID melhorOfertaPizza; // The agent who provides the best offer 
+		private int pizzaMaisBarata;  // The best offered price
 		private int repliesCnt = 0; // The counter of replies from seller agents
 		private MessageTemplate mt; // The template to receive replies
 		private int step = 0;
@@ -105,10 +112,10 @@ public class ClienteAgent extends Agent {
 					if (reply.getPerformative() == ACLMessage.PROPOSE) {
 						// This is an offer 
 						int price = Integer.parseInt(reply.getContent());
-						if (melhorPizzaria == null || price < pizzaMaisVendida) {
+						if (melhorOfertaPizza == null || price < pizzaMaisBarata) {
 							// This is the best offer at present
-							pizzaMaisVendida = price;
-							melhorPizzaria = reply.getSender();
+							pizzaMaisBarata = price;
+							melhorOfertaPizza = reply.getSender();
 						}
 					}
 					repliesCnt++;
@@ -124,7 +131,7 @@ public class ClienteAgent extends Agent {
 			case 2:
 				// Send the purchase order to the seller that provided the best offer
 				ACLMessage order = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
-				order.addReceiver(melhorPizzaria);
+				order.addReceiver(melhorOfertaPizza);
 				order.setContent(pizzaName);
 				order.setConversationId("pedido-pizza");
 				order.setReplyWith("order"+System.currentTimeMillis());
@@ -142,7 +149,7 @@ public class ClienteAgent extends Agent {
 					if (reply.getPerformative() == ACLMessage.INFORM) {
 						// Purchase successful. We can terminate
 						System.out.println(pizzaName+" successfully purchased from agent "+reply.getSender().getName());
-						System.out.println("Preço = "+pizzaMaisVendida);
+						System.out.println("Preço = "+pizzaMaisBarata);
 						myAgent.doDelete();
 					}
 					else {
@@ -160,15 +167,15 @@ public class ClienteAgent extends Agent {
 
 		public boolean done() {
 			
-			if (step == 2 && melhorPizzaria == null) {
+			if (step == 2 && melhorOfertaPizza == null) {
 				System.out.println("Attempt failed: "+pizzaName+" not available for sale");
 			}
 			
-			boolean bookIsNotAvailable = (step == 2 && melhorPizzaria == null);
+			boolean pizzaIsNotAvailable = (step == 2 && melhorOfertaPizza == null);
 			boolean negotiationIsConcluded = (step == 4);
 			
 			boolean isDone = false;
-			if (bookIsNotAvailable || negotiationIsConcluded) {
+			if (pizzaIsNotAvailable || negotiationIsConcluded) {
 				isDone = true;
 			}
 			else {
