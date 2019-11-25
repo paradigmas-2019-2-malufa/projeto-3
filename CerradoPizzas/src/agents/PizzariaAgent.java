@@ -5,8 +5,8 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
-import jade.domain.FIPAAgentManagement.DFAgentDeion;
-import jade.domain.FIPAAgentManagement.ServiceDeion;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import java.util.*;
 
 public class PizzariaAgent extends Agent {
@@ -15,23 +15,23 @@ public class PizzariaAgent extends Agent {
 	 */
 	private static final long serialVersionUID = 1L;
 	// The catalogue of books for sale (maps the title of a book to its price)
-	private Hashtable<String,Integer> catalogue;
+	private Hashtable<String,Integer> menu;
 	// The GUI by means of which the user can add books in the catalogue
 	//private BookSellerGui myGui;
 
 	// Put agent initializations here
 	protected void setup() {
 		// Create the catalogue
-		catalogue = new Hashtable<String,Integer>();
+		menu = new Hashtable<String,Integer>();
 
 		// Create and show the GUI 
 		//myGui = new BookSellerGui(this);
 		//myGui.showGui();
 
 		// Register the book-selling service in the yellow pages
-		DFAgentDeion dfd = new DFAgentDeion();
+		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
-		ServiceDeion sd = new ServiceDeion();
+		ServiceDescription sd = new ServiceDescription();
 		sd.setType("pizza-selling");
 		sd.setName("JADE-pizza-trading");
 		dfd.addServices(sd);	
@@ -73,7 +73,7 @@ public class PizzariaAgent extends Agent {
 				String title = msg.getContent();
 				ACLMessage reply = msg.createReply();
 
-				Integer price = (Integer) catalogue.get(title);
+				Integer price = (Integer) menu.get(title);
 				if (price != null) {
 					// The requested book is available for sale. Reply with the price
 					reply.setPerformative(ACLMessage.PROPOSE);
@@ -113,7 +113,7 @@ public class PizzariaAgent extends Agent {
 				String title = msg.getContent();
 				ACLMessage reply = msg.createReply();
 
-				Integer price = (Integer) catalogue.remove(title);
+				Integer price = (Integer) menu.remove(title);
 				if (price != null) {
 					reply.setPerformative(ACLMessage.INFORM);
 					System.out.println(title+" sold to agent "+msg.getSender().getName());
@@ -142,7 +142,7 @@ public class PizzariaAgent extends Agent {
 			private static final long serialVersionUID = 1L;
 
 			public void action() {
-				catalogue.put(title, new Integer(price));
+				menu.put(title, new Integer(price));
 				System.out.println(title+" inserido no menu. Preço = "+price);
 			}
 		} );
