@@ -56,11 +56,11 @@ public class PizzariaAgent extends Agent {
 				String pizzaName = msg.getContent();
 				ACLMessage reply = msg.createReply();
 
-				Integer price = (Integer) menu.get(pizzaName);
-				if (price != null) {
+				int price =  menu.get(pizzaName);
+				if (price != 0) {
 					// The requested book is available for sale. Reply with the price
 					reply.setPerformative(ACLMessage.PROPOSE);
-					reply.setContent(String.valueOf(price.intValue()));
+					reply.setContent(String.valueOf(price));
 				}
 				else {
 					// The requested book is NOT available for sale.
@@ -87,8 +87,8 @@ public class PizzariaAgent extends Agent {
 				String pizzaName = msg.getContent();
 				ACLMessage reply = msg.createReply();
 
-				Integer price = (Integer) menu.remove(pizzaName);
-				if (price != null) {
+				int price = menu.get(pizzaName);
+				if (price != 0) {
 					reply.setPerformative(ACLMessage.INFORM);
 					System.out.println(pizzaName+" sold to agent "+msg.getSender().getName());
 				}
