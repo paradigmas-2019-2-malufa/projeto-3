@@ -17,7 +17,7 @@ public class ClienteAgent extends Agent {
 
 	private static final long serialVersionUID = 1L;
 	// The title of the book to buy
-	private String pizzaName;
+	private String pedidoNome;
 	// The list of known seller agents
 	private AID[] pizzariaAgents;
         private ArrayList<Pedido> pedidos = null;
@@ -30,10 +30,10 @@ public class ClienteAgent extends Agent {
 //		Object[] args = getArguments();
                 pedidos = Pedido.geraPedidos(10);
                 int size = pedidos.size();
-                for(int i=0 ;i < size  ; i++)
+                
 		if (pedidos != null && pedidos.size()> 0) {
-			pizzaName = (String) pedidos.get(0).getPizza() ;
-			System.out.println("A pizza pedida eh "+pizzaName);
+			pedidoNome = (String) pedidos.get(0).getPizza() ;
+			System.out.println("Tentando comprar a pizza pedida eh "+pedidoNome);
 
 			// Add a TickerBehaviour that schedules a request to seller agents every 10 seconds
 			addBehaviour(new TickerBehaviour(this, Gerador.random.nextInt(1500)+1000) {
@@ -41,11 +41,11 @@ public class ClienteAgent extends Agent {
 				private static final long serialVersionUID = 1L;
 
 				protected void onTick() {
-					System.out.println("Tentando pedir a pizza "+pizzaName);
+					System.out.println("Tentando pedir a pizza "+pedidoNome);
 					// Update the list of seller agents
 					DFAgentDescription template = new DFAgentDescription();
 					ServiceDescription sd = new ServiceDescription();
-					sd.setType("venda-pizza");
+					sd.setType("pizza-selling");
 					template.addServices(sd);
 					try {
 						DFAgentDescription[] result = DFService.search(myAgent, template); 
@@ -64,7 +64,7 @@ public class ClienteAgent extends Agent {
 					myAgent.addBehaviour(new RequestPerformer());
 				}
 			} );
-		}
+                }
 		else {
 			// Make the agent terminate
 			System.out.println("A pizza nao foi anotada corretamente!");
@@ -72,6 +72,13 @@ public class ClienteAgent extends Agent {
 		}
 	}
 
+
+
+	/**
+	   Inner class RequestPerformer.
+	   This is the behaviour used by Book-buyer agents to request seller 
+	   agents the target book.
+	 */
 
 	/**
 	   Inner class RequestPerformer.
@@ -95,7 +102,7 @@ public class ClienteAgent extends Agent {
 				for (int i = 0; i < pizzariaAgents.length; ++i) {
 					cfp.addReceiver(pizzariaAgents[i]);
 				} 
-				cfp.setContent(pizzaName);
+				cfp.setContent(pedidoNome);
 				cfp.setConversationId("pedido-pizza");
 				cfp.setReplyWith("cfp"+System.currentTimeMillis()); // Unique value
 				myAgent.send(cfp);
@@ -132,7 +139,7 @@ public class ClienteAgent extends Agent {
 				// Send the purchase order to the seller that provided the best offer
 				ACLMessage order = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
 				order.addReceiver(melhorOfertaPizza);
-				order.setContent(pizzaName);
+				order.setContent(pedidoNome);
 				order.setConversationId("pedido-pizza");
 				order.setReplyWith("order"+System.currentTimeMillis());
 				myAgent.send(order);
@@ -148,7 +155,7 @@ public class ClienteAgent extends Agent {
 					// Purchase order reply received
 					if (reply.getPerformative() == ACLMessage.INFORM) {
 						// Purchase successful. We can terminate
-						System.out.println(pizzaName+" successfully purchased from agent "+reply.getSender().getName());
+						System.out.println(pedidoNome+" successfully purchased from agent "+reply.getSender().getName());
 						System.out.println("Preço = "+pizzaMaisBarata);
 						myAgent.doDelete();
 					}
@@ -168,7 +175,7 @@ public class ClienteAgent extends Agent {
 		public boolean done() {
 			
 			if (step == 2 && melhorOfertaPizza == null) {
-				System.out.println("Attempt failed: "+pizzaName+" not available for sale");
+				System.out.println("Attempt failed: "+pedidoNome+" not available for sale");
 			}
 			
 			boolean pizzaIsNotAvailable = (step == 2 && melhorOfertaPizza == null);
