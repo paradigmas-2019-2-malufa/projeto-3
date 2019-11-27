@@ -90,7 +90,7 @@ public class PizzariaAgent extends Agent {
 				int price = menu.get(pizzaName);
 				if (price != 0) {
 					reply.setPerformative(ACLMessage.INFORM);
-					System.out.println(pizzaName+" sold to agent "+msg.getSender().getName());
+					System.out.println(pizzaName+" vendida para "+msg.getSender().getLocalName());
 				}
 				else {
 					reply.setPerformative(ACLMessage.FAILURE);
