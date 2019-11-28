@@ -11,6 +11,8 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Pedido;
 import util.Gerador;
 
@@ -23,7 +25,7 @@ public class ClienteAgent extends Agent {
     // The list of known seller agents
     private AID[] pizzariaAgents;
     private ArrayList<Pedido> pedidos = null;
-    private static final int QUANTIDADE = 10;
+    private static int QUANTIDADE = 13;
     // Put agent initializations here
 
     protected void setup() {
@@ -152,6 +154,11 @@ public class ClienteAgent extends Agent {
                             // Purchase successful. We can terminate
                             System.out.println(pedidoNome + " vendida por  " + reply.getSender().getName());
                             System.out.println("Preço = " + pizzaMaisBarata);
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(ClienteAgent.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                             if (pedidos.size() > 0) {
                                 pedidoNome = pedidos.get(0).getPizza();
                             }
@@ -165,7 +172,7 @@ public class ClienteAgent extends Agent {
                             if (pedidosAtentidos == QUANTIDADE) {
                                 myAgent.doDelete();
                             } else {
-                                System.err.println("Pedidos atendidos " + pedidosAtentidos++);
+                                System.err.println("Pedidos atendidos " + (pedidosAtentidos++ + 1 ));
                             }
                         } else {
                             System.out.println("Attempt failed: Pizza já vendida.");

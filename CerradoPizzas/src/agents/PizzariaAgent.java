@@ -110,7 +110,7 @@ public class PizzariaAgent extends Agent {
 			private static final long serialVersionUID = 1L;
 
 			public void action() {
-				menu.put(pizzaName, new Integer(price));
+				menu.put(pizzaName, price);
 				System.out.println(pizzaName+" inserido no menu. Preço = "+price);
 			}
 		} );
