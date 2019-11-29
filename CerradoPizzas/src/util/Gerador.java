@@ -25,7 +25,7 @@ public class Gerador {
             "Bacon",
             "Portuguesa",
             "Moda da casa",
-            "A moda do chefe ;)",
+            "A moda do chefe",
             "Quatro queijos",
             "Vegetariana",
             "Americana",
@@ -61,9 +61,8 @@ public class Gerador {
         	return random.nextInt(10)+1;
 		}
         
-        public static String novoPedidoJSON() throws InterruptedException{
-            Thread.sleep(1000);
-        	return new Pedido(newNome(),newPizza(),newMesa()).toJSON();
+        public static String novoPedidoJSON(){
+        	return new Pedido(newNome(),newPizza(),"Pizza Ratão").toJSON();
             
         }
         public static Hashtable<String,Integer> newCatalogo(){
