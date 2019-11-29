@@ -31,16 +31,16 @@ public class ComunicadorAPI {
         processoSO(pb);
     }
 
-    public void setCommand(String command) {
-        this.command = command;
+    public static void setCommand(String c) {
+        command = c;
     }
 
-    public void setPrompt(String prompt) {
-        this.prompt = prompt;
+    public static  void setPrompt(String p) {
+        prompt = p;
     }
 
-    public void setOp(String op) {
-        this.op = op;
+    public static void setOp(String o) {
+        op = o;
     }
 
     private static void processoSO(ProcessBuilder pb) {
