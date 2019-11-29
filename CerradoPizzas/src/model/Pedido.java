@@ -8,7 +8,15 @@ public class Pedido {
 
     private String nome;
     private String pizza;
-    private int mesa;
+    private int mesa = 0;
+    private String Pizzaria;
+
+    public Pedido(String nome, String pizza, String Pizzaria) {
+        this.nome = nome;
+        this.pizza = pizza;
+        this.Pizzaria = Pizzaria;
+    }
+    
 
     public Pedido(String nome, String pizza, int mesa) {
         this.nome = nome;
@@ -28,6 +36,15 @@ public class Pedido {
         return mesa;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setPizza(String pizza) {
+        this.pizza = pizza;
+    }
+    
+
     private String getNomeJSON() {
         return "\"nome\": \"" + nome + "\"";
     }
@@ -40,13 +57,22 @@ public class Pedido {
     	return "\"mesa\": \"" + mesa + "\"";
     }
 
+    public void setPizzaria(String Pizzaria) {
+        this.Pizzaria = Pizzaria;
+    }
+     private String getPizzariaJSON() {
+        return "\"Pizzaria\": \"" + Pizzaria + "\"";
+    }
+    
+    
+
     public String toJSON() {
         StringJoiner sj = new StringJoiner(",","{","}");
         sj.setEmptyValue("{}");
         
         sj.add(getNomeJSON());
         sj.add(getPizzaJSON());
-        sj.add(getMesaJSON());
+        sj.add(getPizzariaJSON());
         
         
         String json = sj.toString();
