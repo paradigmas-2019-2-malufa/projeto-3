@@ -93,7 +93,7 @@ public class PizzariaAgent extends Agent {
 				if (price != 0) {
 					reply.setPerformative(ACLMessage.INFORM);
 					System.out.println(pizzaName+" vendida para "+msg.getSender().getLocalName());
-                                        Pedido pedido = new Pedido(msg.getSender().getName(),pizzaName,getAID().getName());
+                                        Pedido pedido = new Pedido(Gerador.newNome(),pizzaName,getAID().getName());
                                         System.err.println(pedido.toJSON());
                                         ComunicadorAPI.enviarAPI(pedido.toJSON());
 				}

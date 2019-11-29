@@ -12,7 +12,9 @@ public class Gerador {
         private static final int PRECOBASE = 15;
         private static String[] nomes = {
             "Lucas","Marcelo","Matheus","Fabiana","Milene","Romeu","Gabriela",
-            "Micaella","João","Keanu Reeves","Ester","Eduarda","Péricles"
+            "Micaella","João","Keanu Reeves","Ester","Eduarda","Péricles","Maurício",
+            "Luciana","Maicão","Chris","Negão","Life","Larissa","Lídia","Gustavo","Jamil",
+            "André","Edgar"
         };
     
         private static String [] pizzas = {
