@@ -10,6 +10,10 @@ public class ComunicadorAPI {
     private static String command = "echo  'Olá, mundo !'";
     private static String prompt = "bash";
     private static String op = "-c";
+    public static String SERVIDOR = " http://localhost:3000/pedidos";
+    public static String COMUNICADOR = "curl --header \"Content-Type: application/json\" "
+            + "  --request POST "
+            + "  --data '";
 
     public static void enviarDados() {
         pb.command(prompt, op, command);
@@ -54,6 +58,18 @@ public class ComunicadorAPI {
         } catch (IOException e) {
         } catch (InterruptedException e) {
         }
+    }
+
+    public static void enviarAPI(String json) {
+        final String url = "http://localhost:3000/post/";
+      
+         StringBuilder mensagem = new StringBuilder(COMUNICADOR) ;
+               
+         mensagem.append( (json + "' "));
+         mensagem.append(SERVIDOR);
+         System.out.println(mensagem.toString());
+         enviarDados(mensagem.toString());
+         
     }
 
 }
